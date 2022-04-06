@@ -1,0 +1,27 @@
+version: '3'
+services:
+  spark-master:
+    build:
+      context: ../..
+      dockerfile: ./tests/docker_spark/master/Dockerfile
+    image: cluster-spark-master:3.2.1
+    container_name: spark-master
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+      - "4041:4041"
+      - "5000-5010:5000-5010"
+    volumes:
+      - ../app:/app
+  spark-worker-1:
+    build:
+      context: ../..
+      dockerfile: ./tests/docker_spark/worker/Dockerfile
+    image: cluster-spark-worker:3.2.1
+    container_name: spark-worker-1
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
+    volumes:
+      - ../app:/app
